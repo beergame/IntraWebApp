@@ -52,7 +52,7 @@ namespace IntraWebApp.Controllers
 				var result = await _articleService.CreateAsync(accessToken, article);
 				if (result != 0)
 				{
-					return RedirectToAction("GetDetails", result);
+					return RedirectToAction("GetAll");
 				}
 			}
 			return View(model);
@@ -75,6 +75,19 @@ namespace IntraWebApp.Controllers
 			}
             
 			return View();
+		}
+
+		[HttpGet("Article/Delete/{id}")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value;
+			var result = await _articleService.DeleteByIdAsync(accessToken, id);
+			if (result == Services.Models.SystemResponse.Success)
+			{
+				return RedirectToAction("GetAll");
+			}
+
+			return View("Deleted");
 		}
 
 		[HttpGet]

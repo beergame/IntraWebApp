@@ -5,5 +5,6 @@ namespace IntraWebApp.Services.Models
     {
 		public string AccessToken { get; set; }
         public int ExpireIn { get; set; }
+		public bool IsAdmin { get; set; }
     }
 }
