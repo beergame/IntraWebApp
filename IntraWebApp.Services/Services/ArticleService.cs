@@ -55,9 +55,16 @@ namespace IntraWebApp.Services.Services
 			return systemResponse;
 		}
 
-		public Task<IEnumerable<Article>> GetAllAsync()
+		public async Task<IEnumerable<Article>> GetAllAsync()
 		{
-			throw new NotImplementedException();
+			var articles = new List<Article>();
+			var response = await client.GetAsync(apiUrl + "getAll?pageSize=5");
+			if (response.IsSuccessStatusCode)
+			{
+				var content = await response.Content.ReadAsStringAsync();
+				articles = JsonConvert.DeserializeObject<List<Article>>(content);
+			}
+			return articles;
 		}
 
 		public async Task<Article> GetByIdAsync(int id)

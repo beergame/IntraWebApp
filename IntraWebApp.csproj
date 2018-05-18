@@ -13,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\User\" />
-    <Folder Include="Views\User\" />
+    <Folder Include="Models\Account\" />
+    <Folder Include="Views\Account\" />
+    <Folder Include="Models\Article\" />
+    <Folder Include="Views\Article\" />
   </ItemGroup>
 </Project>

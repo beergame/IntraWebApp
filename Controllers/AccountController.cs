@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IntraWebApp.Models.User;
+using IntraWebApp.Models.Account;
 using IntraWebApp.Services.Models.User;
 using IntraWebApp.Services.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -14,13 +14,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IntraWebApp.Controllers
 {
-	public class UserController : Controller
+	public class AccountController : Controller
     {
 		private readonly IUserService _userService;
 		private ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
 
 
-		public UserController(IUserService userService)
+		public AccountController(IUserService userService)
 		{
 			_userService = userService;
 		}

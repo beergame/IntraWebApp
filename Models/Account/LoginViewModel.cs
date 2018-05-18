@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IntraWebApp.Models.User
+namespace IntraWebApp.Models.Account
 {
 	public class LoginViewModel
     {
