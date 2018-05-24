@@ -1,5 +1,24 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IntraWebApp.Models.Article.ArticleDetailsViewModel
+
 @{
+    ViewData["Title"] = "Confirmer la suppression";
 }
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <h3>Etes-vous sûr de vouloir supprimer cet article ?</h3><br/>
+    @if (Model != null)
+    {
+        <p>@Model.Title</p>
+    }
+    <br/>
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+        <div class="form-actions no-color">
+            <input type="submit" value="Supprimer" class="btn btn-default" />
+            |
+            @Html.ActionLink("Retour aux articles", "GetAll")
+        </div>
+    }
+</div>

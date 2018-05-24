@@ -1,0 +1,39 @@
+﻿@model IntraWebApplication.Models.Article.ArticleUpdateViewModel
+@{
+    ViewData["Title"] = "Modifier l'article";
+}
+
+<h2> @ViewData["Title"]</h2>
+
+<div class="row">
+    @if (Model != null)
+    {
+        <div class="col-md-4">
+            <h4>@Model.Title</h4>
+            <hr/>
+            @using (Html.BeginForm("Update", "Article", FormMethod.Post, new {enctype = "multipart/form-data", id = Model.Id}))
+            {
+                <div class="form-group">
+                    <label class="control-label">Titre</label>
+                    @Html.TextBoxFor(model => model.Title, new {@class = "form-control", @value = Model.Title })
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Contenu de l'article</label>
+                    @Html.TextAreaFor(model => model.Content, new {@class = "form-control", @value = Model.Content})
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Image</label>
+                    @Html.TextBoxFor(model => model.Picture, new {type = "file", @class = "form-control"})
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Modifier" class="btn btn-default"/>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="alert-danger">Erreur lors de la récupération de l'article</p>
+    }
+
+</div>

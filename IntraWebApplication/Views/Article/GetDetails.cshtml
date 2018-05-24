@@ -17,7 +17,8 @@
         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
         {
             @Html.ActionLink("Supprimer", "Delete", "Article", new { id = Model.Id}) 
-
+            <p> | </p>
+            @Html.ActionLink("Modifier", "Update", "Article", new { id = Model.Id}) 
         }
     }
 else

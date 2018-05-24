@@ -8,6 +8,7 @@ using IntraWebApp.Business.Models;
 using IntraWebApp.Business.Models.Article;
 using IntraWebApp.Business.Services;
 using IntraWebApp.Models.Article;
+using IntraWebApplication.Models.Article;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,12 +45,15 @@ namespace IntraWebApplication.Controllers
 					Content = model.Content
 				};
 
-                using (var memoryStream = new MemoryStream())
-				{
-					await model.Picture.CopyToAsync(memoryStream);
-					article.Picture = memoryStream.ToArray();
-				}
-				var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value;
+			    if (model.Picture != null)
+			    {
+			        using (var memoryStream = new MemoryStream())
+			        {
+			            await model.Picture.CopyToAsync(memoryStream);
+			            article.Picture = memoryStream.ToArray();
+			        }
+			    }
+                var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
 				var result = await _articleService.CreateAsync(accessToken, article);
 				if (result != 0)
 				{
@@ -78,17 +82,37 @@ namespace IntraWebApplication.Controllers
 			return View();
 		}
 
-		[HttpGet("Article/Delete/{id}")]
-		public async Task<IActionResult> Delete(int id)
+        [HttpGet("Article/Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _articleService.GetByIdAsync(id);
+            if (result != null)
+            {
+                var article = new ArticleDetailsViewModel
+                {
+                    Id = result.Id,
+                    Title = result.Title,
+                    Content = result.Content
+                };
+                return View(article);
+            }
+
+            return View();
+        }
+
+		[HttpPost, ActionName("Delete")]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value;
+			var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
 			var result = await _articleService.DeleteByIdAsync(accessToken, id);
 			if (result == SystemResponse.Success)
 			{
 				return RedirectToAction("GetAll");
 			}
 
-			return View("Deleted");
+			return RedirectToAction("GetDetails", new {id = id});
 		}
 
 		[HttpGet]
@@ -117,10 +141,59 @@ namespace IntraWebApplication.Controllers
 
 
         private string GetImageUrl(byte[] data)
-		{
+        {
+            if (data == null) return string.Empty;
 			var imgToBase64 = Convert.ToBase64String(data);
 			return $"data:image/png;base64,{imgToBase64}";
 		}
+
+        [HttpGet("Article/update/{id}")]
+        public async Task<IActionResult> Update(int id)
+        {
+            var result = await _articleService.GetByIdAsync(id);
+            if (result == null) return View();
+
+            var article = new ArticleUpdateViewModel
+            {
+                Id = result.Id,
+                Title = result.Title,
+                Content = result.Content
+            };
+            return View(article);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(int id, ArticleUpdateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var article = new UpdateArticle
+                {
+                    Id = id,
+                    Title = model.Title,
+                    Content = model.Content
+                };
+
+                if (model.Picture != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await model.Picture.CopyToAsync(memoryStream);
+                        article.Picture = memoryStream.ToArray();
+                    }
+                }
+                
+                var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
+                var result = await _articleService.UpdateAsync(accessToken, article);
+                if (result == SystemResponse.Success)
+                {
+                    return RedirectToAction("GetDetails", new {id = id});
+                }
+            }
+            return View(model);
+        }
 
 		// GET: /<controller>/
         public IActionResult Index()

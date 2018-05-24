@@ -111,7 +111,7 @@ namespace IntraWebApplication.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Update()
 		{
-			var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value;
+			var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
             var result = await _userService.GetUser(accessToken);
 			var model = new UpdateViewModel();
             if (result != null)
@@ -131,7 +131,7 @@ namespace IntraWebApplication.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value;
+				var accessToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
                 var userToUpdate = new Update
                 {
                     FirstName = model.FirstName,

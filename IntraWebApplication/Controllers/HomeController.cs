@@ -21,7 +21,8 @@ namespace IntraWebApplication.Controllers
        
 
 		private string GetImageUrl(byte[] data)
-        {
+		{
+		    if (data == null) return string.Empty;
             var imgToBase64 = Convert.ToBase64String(data);
             return $"data:image/png;base64,{imgToBase64}";
         }

@@ -18,8 +18,8 @@
             <img src="@Model.Last().ImageUrl" alt="@Model.Last().Title" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
-                    @Model.Last().Title
-                    <a class="btn btn-default" href="@Url.Action(" GetDetails", "Article" ,new { id=Model.Last().Id })">
+                    @Model.Last().Title<br/>
+                    <a class="btn btn-default" href="@Url.Action("GetDetails", "Article" ,new { id=Model.Last().Id })">
                         Voir l'article
                     </a>
                 </p>
@@ -33,7 +33,7 @@
             <img src="@item.ImageUrl" alt="@item.Title" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
-                    @item.Title
+                    @item.Title<br/>
                     <a class="btn btn-default" href="@Url.Action("GetDetails", "Article" ,new { id=item.Id })">
                         Voir l'article
                     </a>
