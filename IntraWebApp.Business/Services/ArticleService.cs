@@ -13,7 +13,7 @@ namespace IntraWebApp.Business.Services
 	public class ArticleService : IArticleService
 	{
 		private readonly HttpClient client = new HttpClient();
-        private const string apiUrl = "http://localhost:51649/api/article/";
+		private const string apiUrl = "http://172.16.67.242:51650/api/article/";
 
 		public async Task<int> CreateAsync(string accessToken, Article article)
 		{

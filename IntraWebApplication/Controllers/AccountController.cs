@@ -80,23 +80,25 @@ namespace IntraWebApplication.Controllers
 					Password = model.Password
 				};
 				var result = await _userService.Authenticate(userToAuthenticate);
-				var role = result.IsAdmin ? "Admin" : "Normal";
-				List<Claim> claims = new List<Claim>
-                {
-				    new Claim(ClaimTypes.Name, model.Username),
-					new Claim(ClaimTypes.UserData, result.AccessToken),
-					new Claim(ClaimTypes.Role, role)
-                };
+				if (result != null && result.AccessToken != null)
+				{
+					var role = result.IsAdmin ? "Admin" : "Normal";
+                    List<Claim> claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, model.Username),
+                        new Claim(ClaimTypes.UserData, result.AccessToken),
+                        new Claim(ClaimTypes.Role, role)
+                    };
 
-				identity.AddClaims(claims);
-				ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
-                {
-                    ExpiresUtc = DateTime.UtcNow.AddMinutes(30)
-                });
-                
-				return RedirectToAction("Index", "Home");
+                    identity.AddClaims(claims);
+                    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
+                    {
+                        ExpiresUtc = DateTime.UtcNow.AddMinutes(30)
+                    });
 
+                    return RedirectToAction("Index", "Home");	
+				}
 			}
 			return View(model);
 		}

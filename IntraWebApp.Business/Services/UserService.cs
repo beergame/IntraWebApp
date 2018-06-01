@@ -10,7 +10,7 @@ namespace IntraWebApp.Business.Services
     public class UserService : IUserService
     {
 		private readonly HttpClient client = new HttpClient();
-		private const string apiUrl = "http://localhost:51649/api/user/";
+		private const string apiUrl = "http://172.16.67.242:51650/api/user/";
 
 
 		public async Task<Token> Authenticate(Authenticate userToAuthenticate)
